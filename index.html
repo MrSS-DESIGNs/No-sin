@@ -129,7 +129,7 @@
         <main>
             <section id="dashboard" class="app-section active"><div class="daily-content"><h3>Aaj ki Barkat ✨</h3><p id="asmaAlHusna"></p><small id="asmaAlHusnaMeaning"></small></div><h2>Aapke Active Goals</h2><div id="goalList"></div></section>
             <section id="addGoal" class="app-section"><h2>Naya Hadaf (Goal) Set Karein</h2><form id="goalForm"></form></section>
-            <section id="diary" class="app-section"><h2>Roohani Diary</h2><p>Yeh 100% private hai.</p><form id="diaryEntryForm"><div class="form-group"><textarea id="diaryText" placeholder="Aaj aap kaisa mehsoos kar rahe hain?" required rows="5"></textarea></div><button type="submit" class="btn btn-primary">Save Karein</button></form><div id="diaryEntryList" class="diary-entry-list"></div></section>
+            <section id="diary" class="app-section"><h2>Roohani Diary</h2><p>Yeh 100% private hai.</p><form id="diaryEntryForm"><div class="form-group"><textarea id="diaryText" placeholder="Aaj aap kaisa mehsoos kar rahe hain?" required rows="5"></textarea></div><button type="submit" class="btn btn-primary">Save Karein</button></form><div id="diaryEntryList" class="diary-entry-list"></div><button id="downloadDiaryPdfBtn" class="btn btn-primary" style="margin-top: 20px; width: 100%;">Diary PDF me Download Karein 📖</button></section>
             <section id="journey" class="app-section"><h2>Aapka Tauba Ka Safar</h2><div id="journeyProgressContainer"></div><hr style="margin: 20px 0;"><button id="downloadPdfBtn" class="btn btn-primary">Safar PDF me Download Karein 📜</button></section>
             <section id="resources" class="app-section"><h2>Madadgaar Resources</h2><div id="resourceList"></div></section>
         </main>
@@ -160,10 +160,10 @@
             cacheDOMElements() {
                 this.elements = {
                     mainAppContainer: document.getElementById('mainAppContainer'), greeting: document.getElementById('greeting'), tabs: document.querySelectorAll('.nav-tab'), sections: document.querySelectorAll('.app-section'), goalForm: document.getElementById('goalForm'), goalList: document.getElementById('goalList'), dailyName: document.getElementById('asmaAlHusna'), dailyMeaning: document.getElementById('asmaAlHusnaMeaning'), journeyContainer: document.getElementById('journeyProgressContainer'), diaryForm: document.getElementById('diaryEntryForm'), diaryList: document.getElementById('diaryEntryList'), themeSwitcher: document.getElementById('themeSwitcher'), welcomeModal: document.getElementById('welcomeModal'), strictModal: document.getElementById('strictModal'), notificationModal: document.getElementById('notificationModal'), confirmModal: document.getElementById('confirmModal'), resourceList: document.getElementById('resourceList'),
-                    jannahPoints: document.getElementById('jannahPoints'), activeGoals: document.getElementById('activeGoals'), bestStreak: document.getElementById('bestStreak')
+                    jannahPoints: document.getElementById('jannahPoints'), activeGoals: document.getElementById('activeGoals'), bestStreak: document.getElementById('bestStreak'), downloadDiaryPdfBtn: document.getElementById('downloadDiaryPdfBtn')
                 };
                 this.elements.goalForm.innerHTML = `<div class="form-group"><label for="goalTitle">Aap kya chhodna/shuru karna chahte hain?</label><input type="text" id="goalTitle" placeholder="Jaise: 'Main gussa control karunga.'" required></div><div class="form-group"><label for="goalDuration">Kitne din ka Hadaf hai?</label><select id="goalDuration"><option value="0">Hamesha</option><option value="7">7 Din</option><option value="30">30 Din</option><option value="40">40 Din</option></select></div><div class="form-group"><label for="goalDifficulty">Mushkil</label><select id="goalDifficulty"><option value="easy">Aasan</option><option value="medium">Darmiyana</option><option value="hard">Mushkil</option></select></div><div class="form-group"><label for="penaltyType">Penalty (Saza)?</label><select id="penaltyType"><option value="prayer">Nafil Namaz</option><option value="money">Sadqa</option><option value="other">Kuch aur</option></select></div><div class="form-group" id="penaltyValueContainer"><label for="penaltyValue">Penalty ki Tafseel</label><input type="text" id="penaltyValue" required></div><div class="form-group"><label for="goalMode">Mode</label><select id="goalMode"><option value="medium">Medium</option><option value="strict">Strict</option></select></div><button type="submit" class="btn btn-primary">Hadaf Set Karein</button>`;
-                this.elements.strictModal.innerHTML = `<div class="modal-content"><h3>Strict Mode Contract 🕋</h3><p>Aap Allah ko Gawah banakar yeh ahad kar rahe hain.</p><div class="modal-contract" style="background: var(--bg-color); padding: 15px; border-radius: 8px; text-align: left; font-style: italic; color: var(--text-color); margin-bottom: 20px;">"Main Allah ko gawah maan kar kehta/kehti hoon ke main is aadat (<span id="contractGoalTitle" style="font-weight:bold;">...</span>) ko chhodne ki poori koshish karunga/karungi. Agar main yeh rule toda, to apni tauba nayi karunga/karungi aur tay shuda penalty (<span id="contractPenalty" style="font-weight:bold;">...</span>) ada karunga."</div><p>Kya aap is ahad ko qubool karte hain?</p><div style="display: flex; justify-content: center; gap: 15px;"><button id="acceptContractBtn" class="btn btn-primary">Qubool Hai ✅</button><button id="cancelContractBtn" class="btn" style="background-color: var(--danger-red); color: #fff;">Cancel ❌</button></div></div>`;
+                this.elements.strictModal.innerHTML = `<div class="modal-content"><h3>Strict Mode Contract 🕋</h3><p>Aap Allah ko Gawah banakar yeh ahad kar rahe hain.</p><div class="modal-contract" style="background: var(--bg-color); padding: 15px; border-radius: 8px; text-align: left; font-style: italic; color: var(--text-color); margin-bottom: 20px;">"Main Allah ko gawah maan ke yeh niyat karta/karti hu ki main is gunah (<span id="contractGoalTitle" style="font-weight:bold;">...</span>) ko chhodne ki poori koshish karunga/karungi. Agar main yeh ahad toda, to apni tauba nayi karunga/karungi aur tay shuda penalty (<span id="contractPenalty" style="font-weight:bold;">...</span>) ada karunga/karungi."</div><p>Kya aap is ahad ko qubool karte hain?</p><div style="display: flex; justify-content: center; gap: 15px;"><button id="acceptContractBtn" class="btn btn-primary">Qubool Hai ✅</button><button id="cancelContractBtn" class="btn" style="background-color: var(--danger-red); color: #fff;">Cancel ❌</button></div></div>`;
                 this.elements.notificationModal.innerHTML = `<div class="modal-content"><h3 id="notificationTitle"></h3><p id="notificationMessage"></p><button id="notificationCloseBtn" class="btn btn-primary">Theek Hai</button></div>`;
             },
             loadData() {
@@ -175,9 +175,7 @@
                         this.db = { ...defaultDB, ...savedDB };
                     } catch (e) { this.db = defaultDB; }
                 } else { this.db = defaultDB; }
-                
                 this.applyTheme();
-                
                 if (this.db.userName) {
                     this.startApp();
                 } else {
@@ -191,6 +189,7 @@
                 this.elements.strictModal.querySelector('#acceptContractBtn').addEventListener('click', () => this.acceptContract());
                 this.elements.strictModal.querySelector('#cancelContractBtn').addEventListener('click', () => this.elements.strictModal.style.display = 'none');
                 document.getElementById('downloadPdfBtn').addEventListener('click', () => this.generatePDF());
+                this.elements.downloadDiaryPdfBtn.addEventListener('click', () => this.generateDiaryPDF());
                 this.elements.themeSwitcher.addEventListener('click', () => this.toggleTheme());
                 this.elements.diaryForm.addEventListener('submit', (e) => this.saveDiaryEntry(e));
                 this.elements.goalForm.querySelector('#penaltyType').addEventListener('change', () => this.togglePenaltyInput());
@@ -299,7 +298,7 @@
             saveDiaryEntry(e) { e.preventDefault(); const text = document.getElementById('diaryText').value; if (!text.trim()) return; this.db.diaryEntries.unshift({ id: Date.now(), date: new Date().toISOString(), text }); this.saveData(); this.renderDiary(); document.getElementById('diaryText').value = ''; this.showNotification('Alhamdulillah', 'Aapke ehsaas mehfooz ho gaye hain.', 'success'); },
             renderDiary() { this.elements.diaryList.innerHTML = ''; if (this.db.diaryEntries.length === 0) { this.elements.diaryList.innerHTML = '<p style="text-align:center; opacity: 0.7; margin-top: 20px;">Aapki diary abhi khali hai.</p>'; return; } this.db.diaryEntries.forEach(entry => { const card = document.createElement('div'); card.className = 'goal-card diary-card'; const date = new Date(entry.date); card.innerHTML = `<div class="date">${date.toLocaleDateString('ur-PK', { day: 'numeric', month: 'long', year: 'numeric' })}</div><div class="text">${entry.text.replace(/\n/g, '<br>')}</div>`; this.elements.diaryList.appendChild(card); }); },
             renderResources() {
-                const resources = [ { title: 'Quran ki Tilawat sunein', url: 'https://quran.com' }, { title: 'Hadith ka mutala karein', url: 'https://sunnah.com' }, { title: 'Islamic lectures (Bayan)', url: 'https://www.youtube.com/user/TheMercifulServant' } ];
+                const resources = [ { title: 'Quran ki Tilawat sunein', url: 'https://open.spotify.com/show/39zPBEyaxgr6LBoUA7sYA7?si=s2aeQW7dTMyB-7CMVF1riw' }, { title: 'Hadith ka mutala karein', url: 'https://sunnah.com' }, { title: 'Islamic lectures (Bayan)', url: 'https://youtu.be/yRQlihE0cX4?si=CUdCekjCF6jAMjiV' } ];
                 this.elements.resourceList.innerHTML = resources.map(r => `<div class="resource-card"><h3>${r.title}</h3><a href="${r.url}" target="_blank">Yahan visit karein &rarr;</a></div>`).join('');
             },
             togglePenaltyInput() { const type = this.elements.goalForm.querySelector('#penaltyType').value; const valueInput = this.elements.goalForm.querySelector('#penaltyValue'); if (type === 'prayer') { valueInput.value = "2 Raka'at Nafil Tauba"; } else if (type === 'money') { valueInput.value = "Rs. 100 Sadqa"; } else { valueInput.value = ""; valueInput.placeholder = "Koi aur penalty likhein..."; } },
@@ -321,11 +320,22 @@
                         const completedDays = goal.progress.filter(p => p.status === 'completed').length;
                         const missedDays = goal.progress.filter(p => p.status === 'missed').length;
                         const streak = this.calculateStreak(goal);
+                        const startDate = new Date(goal.startDate);
+                        const formattedStartDate = `${startDate.getDate().toString().padStart(2, '0')}-${(startDate.getMonth() + 1).toString().padStart(2, '0')}-${startDate.getFullYear()}`;
+
                         doc.setFont('helvetica', 'bold'); doc.setFontSize(16);
                         doc.text(`Hadaf ${index + 1}: ${goal.title}`, 14, y); y += 8;
                         doc.setFont('helvetica', 'normal'); doc.setFontSize(12);
-                        doc.text(`- Shuruwat ki Tarikh: ${new Date(goal.startDate).toLocaleDateString('ur-PK')}`, 18, y); y += 6;
-                        doc.text(`- Duration: ${goal.duration > 0 ? `${goal.duration} Din` : 'Hamesha'}`, 18, y); y += 6;
+                        doc.text(`- Shuruwat ki Tarikh: ${formattedStartDate}`, 18, y); y += 6;
+                        doc.text(`- Mode: ${goal.mode}`, 18, y); y += 6;
+                         if (goal.contractSigned) {
+                            doc.setFont('helvetica', 'italic');
+                            const contractText = `Niyat: "Main Allah ko gawah maan ke yeh niyat karta/karti hu ki main is gunah ko chhodne ki poori koshish karunga/karungi."`;
+                            const splitText = doc.splitTextToSize(contractText, 175);
+                            doc.text(splitText, 18, y);
+                            y += (splitText.length * 5); 
+                            doc.setFont('helvetica', 'normal');
+                        }
                         doc.text(`- Current Streak: ${streak} din`, 18, y); y += 6;
                         doc.text(`- Kul Kamyab Din: ${completedDays}`, 18, y); y += 6;
                         doc.text(`- Kul Missed Din: ${missedDays}`, 18, y); y += 12;
@@ -333,6 +343,34 @@
                 }
                 doc.save(`${this.db.userName}_safar_report.pdf`);
                 this.showNotification('PDF Generated!', 'Aapki report download ho rahi hai.', 'success');
+            },
+            generateDiaryPDF() {
+                if (this.db.diaryEntries.length === 0) {
+                    this.showNotification('Diary Khali Hai', 'PDF banane ke liye pehle kuch likhein.', 'info');
+                    return;
+                }
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+                let y = 20;
+                doc.setFont('helvetica', 'bold'); doc.setFontSize(22);
+                doc.text('No Sins - Roohani Diary', 105, y, { align: 'center' }); y += 10;
+                doc.setFont('helvetica', 'normal'); doc.setFontSize(14);
+                doc.text(`Diary of: ${this.db.userName}`, 105, y, { align: 'center' }); y += 15;
+
+                this.db.diaryEntries.forEach(entry => {
+                    if (y > 270) { doc.addPage(); y = 20; }
+                    const d = new Date(entry.date);
+                    const entryDate = `${d.getDate().toString().padStart(2, '0')}-${(d.getMonth() + 1).toString().padStart(2, '0')}-${d.getFullYear()}`;
+                    doc.setFont('helvetica', 'bold'); doc.setFontSize(12);
+                    doc.text(entryDate, 14, y); y += 7;
+                    doc.setFont('helvetica', 'normal'); doc.setFontSize(11);
+                    const diaryText = doc.splitTextToSize(entry.text, 180);
+                    doc.text(diaryText, 16, y);
+                    y += (diaryText.length * 5) + 10;
+                });
+
+                doc.save(`${this.db.userName}_roohani_diary.pdf`);
+                this.showNotification('PDF Generated!', 'Aapki diary download ho rahi hai.', 'success');
             }
         };
         App.init();
