@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="ur" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>No Sins 🌙 - Aapka Roohani Safar</title>
+    <style>
+        :root {
+            --bg-color: #f4f9f4; --card-bg: #ffffff; --text-color: #333; --heading-color: #2c5b4c;
+            --primary-green: #2c5b4c; --golden-accent: #d4af37; --light-gray: #eee;
+            --success-green: #2ecc71; --danger-red: #e74c3c; --today-blue: #3498db;
+            --shadow-color: rgba(0, 0, 0, 0.05);
+        }
+        body.dark-mode {
+            --bg-color: #121212; --card-bg: #1e1e1e; --text-color: #e0e0e0; --heading-color: #a7c4bc;
+            --light-gray: #333; --shadow-color: rgba(0, 0, 0, 0.2);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; transition: background-color 0.3s, color 0.3s, border-color 0.3s; }
+        body {
+            background-color: var(--bg-color); color: var(--text-color); line-height: 1.6;
+        }
+        .container { max-width: 800px; margin: 20px auto; padding: 20px; background: var(--card-bg); border-radius: 12px; box-shadow: 0 4px 20px var(--shadow-color); }
+        header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--golden-accent); padding-bottom: 15px; margin-bottom: 20px; }
+        header .title-group { text-align: left; }
+        header h1 { color: var(--heading-color); font-size: 2.2rem; }
+        header h2 { font-size: 1.1rem; color: var(--text-color); opacity: 0.8; }
+        .theme-switcher { font-size: 1.8rem; cursor: pointer; background: var(--light-gray); border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; }
+        
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .stat-card {
+            background: var(--bg-color);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .stat-card .value { font-size: 1.5rem; font-weight: 700; color: var(--heading-color); }
+        .stat-card .label { font-size: 0.8rem; opacity: 0.8; }
+
+        .nav-tabs { display: flex; margin-bottom: 20px; border-bottom: 1px solid var(--light-gray); overflow-x: auto; }
+        .nav-tab { padding: 10px 15px; cursor: pointer; font-size: 1rem; font-weight: 600; border: none; background: none; color: var(--text-color); opacity: 0.7; position: relative; white-space: nowrap; }
+        .nav-tab.active { color: var(--primary-green); opacity: 1; }
+        .nav-tab.active::after { content: ''; position: absolute; bottom: -1px; left: 0; width: 100%; height: 3px; background-color: var(--primary-green); border-radius: 3px 3px 0 0; }
+        
+        .app-section { display: none; animation: slideIn 0.5s ease-out; }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .app-section.active { display: block; }
+        
+        .daily-content { background: var(--bg-color); padding: 20px; border-radius: 8px; margin-bottom: 20px; border-left: 5px solid var(--golden-accent); text-align: center; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: 600; color: var(--heading-color); }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 12px; border: 1px solid var(--light-gray); border-radius: 6px; font-size: 1rem; background-color: var(--bg-color); color: var(--text-color); }
+        
+        .btn { padding: 12px 20px; font-size: 1rem; font-weight: 600; border: none; border-radius: 6px; cursor: pointer; transition: all 0.3s ease; }
+        .btn-primary { background-color: var(--primary-green); color: #fff; }
+        
+        .goal-card { background: var(--card-bg); border: 1px solid var(--light-gray); border-radius: 8px; padding: 20px; margin-bottom: 15px; box-shadow: 0 2px 5px var(--shadow-color); }
+        .goal-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+        .goal-header h3 { color: var(--heading-color); margin-right: 10px; font-size: 1.2rem; }
+        .goal-meta { display: flex; align-items: center; gap: 10px; }
+        .badge { padding: 4px 10px; border-radius: 12px; font-size: 0.7rem; font-weight: 700; text-transform: capitalize; }
+        .badge.easy { background-color: #e0f2f1; color: #00796b; }
+        .badge.medium { background-color: #fff3e0; color: #f57c00; }
+        .badge.hard { background-color: #fbe9e7; color: #d32f2f; }
+        .streak-counter { display: flex; align-items: center; font-size: 1.5rem; font-weight: bold; color: #ff9800; }
+        .streak-counter span { margin-left: 5px; }
+        
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); display: none; justify-content: center; align-items: center; z-index: 1000; backdrop-filter: blur(5px); }
+        .modal-content { background: var(--card-bg); padding: 30px; border-radius: 12px; max-width: 500px; width: 90%; text-align: center; box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2); animation: modalPop 0.3s ease-out; border-top: 5px solid var(--primary-green); }
+        @keyframes modalPop { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
+        
+        .diary-entry-list .diary-card { border-left: 4px solid var(--golden-accent); margin-top: 20px; }
+        .diary-card .date { font-weight: bold; color: var(--primary-green); opacity: 0.9; margin-bottom: 5px; }
+        
+        .progress-calendar-container { margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--light-gray); }
+        .progress-calendar-container h4 { text-align: center; font-weight: 500; color: var(--text-color); opacity: 0.8; margin-bottom: 10px; }
+        .progress-calendar { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; }
+        .calendar-day, .calendar-header { display: flex; justify-content: center; align-items: center; width: 32px; height: 32px; border-radius: 50%; font-size: 0.8rem; margin: 0 auto; }
+        .calendar-header { font-weight: bold; color: var(--heading-color); }
+        .calendar-day.today { border: 2px solid var(--today-blue); }
+        .calendar-day.completed { background-color: var(--success-green); color: white; }
+        .calendar-day.missed { background-color: var(--danger-red); color: white; }
+        
+        .delete-goal-btn { font-size: 1.2rem; background: none; border: none; color: var(--danger-red); cursor: pointer; opacity: 0.6; padding: 5px; }
+        .delete-goal-btn:hover { opacity: 1; }
+        
+        .resource-card { background: var(--bg-color); border-radius: 8px; padding: 20px; margin-bottom: 15px; }
+        .resource-card h3 { color: var(--heading-color); margin-bottom: 10px; }
+        .resource-card a { color: var(--primary-green); text-decoration: none; font-weight: 600; }
+        
+        footer { text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--light-gray); }
+        footer p { font-size: 0.9rem; color: var(--text-color); opacity: 0.7; }
+        footer .quote { font-style: italic; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container" id="mainAppContainer" style="display: none;">
+        <header>
+            <div class="title-group"><h1>No Sins 🌙</h1><h2 id="greeting"></h2></div>
+            <div class="theme-switcher" id="themeSwitcher" title="Change Theme">🌓</div>
+        </header>
+        
+        <div class="dashboard-stats">
+            <div class="stat-card">
+                <div class="value" id="jannahPoints">0</div>
+                <div class="label">⭐ Jannah Points</div>
+            </div>
+            <div class="stat-card">
+                <div class="value" id="activeGoals">0</div>
+                <div class="label">🎯 Active Goals</div>
+            </div>
+            <div class="stat-card">
+                <div class="value" id="bestStreak">0</div>
+                <div class="label">🔥 Best Streak</div>
+            </div>
+        </div>
+
+        <nav class="nav-tabs">
+            <button class="nav-tab active" data-target="dashboard">Dashboard</button>
+            <button class="nav-tab" data-target="addGoal">Naya Hadaf ✍️</button>
+            <button class="nav-tab" data-target="diary">Roohani Diary 📖</button>
+            <button class="nav-tab" data-target="journey">Mera Safar 📜</button>
+            <button class="nav-tab" data-target="resources">Resources 📚</button>
+        </nav>
+        <main>
+            <section id="dashboard" class="app-section active"><div class="daily-content"><h3>Aaj ki Barkat ✨</h3><p id="asmaAlHusna"></p><small id="asmaAlHusnaMeaning"></small></div><h2>Aapke Active Goals</h2><div id="goalList"></div></section>
+            <section id="addGoal" class="app-section"><h2>Naya Hadaf (Goal) Set Karein</h2><form id="goalForm"></form></section>
+            <section id="diary" class="app-section"><h2>Roohani Diary</h2><p>Yeh 100% private hai.</p><form id="diaryEntryForm"><div class="form-group"><textarea id="diaryText" placeholder="Aaj aap kaisa mehsoos kar rahe hain?" required rows="5"></textarea></div><button type="submit" class="btn btn-primary">Save Karein</button></form><div id="diaryEntryList" class="diary-entry-list"></div></section>
+            <section id="journey" class="app-section"><h2>Aapka Tauba Ka Safar</h2><div id="journeyProgressContainer"></div><hr style="margin: 20px 0;"><button id="downloadPdfBtn" class="btn btn-primary">Safar PDF me Download Karein 📜</button></section>
+            <section id="resources" class="app-section"><h2>Madadgaar Resources</h2><div id="resourceList"></div></section>
+        </main>
+        <footer><p>May Allah accept our efforts. Every small step towards righteousness is a victory.</p><p class="quote">"And whoever relies upon Allah - then He is sufficient for him." - Quran 65:3</p></footer>
+    </div>
+
+    <div id="welcomeModal" class="modal-overlay" style="display: flex;"><div class="modal-content"><h3>Bismillah!</h3><p>Apna roohani safar shuru karne ke liye neeche apna naam likhein.</p><form id="welcomeForm"><div class="form-group"><input type="text" id="userNameInput" placeholder="Aapka Naam" required style="text-align: center; font-size: 1.2rem;"></div><button type="submit" class="btn btn-primary">Safar Shuru Karein</button></form></div></div>
+    <div id="strictModal" class="modal-overlay"></div>
+    <div id="notificationModal" class="modal-overlay"></div>
+    <div id="confirmModal" class="modal-overlay">
+        <div class="modal-content">
+            <h3 id="confirmTitle">Confirm Karein</h3>
+            <p id="confirmMessage">Kya aap waqai is hadaf (goal) ko delete karna chahte hain? Yeh action reverse nahi ho sakta.</p>
+            <div style="display: flex; justify-content: center; gap: 15px; margin-top: 20px;">
+                <button id="confirmYesBtn" class="btn btn-primary" style="background-color: var(--danger-red);">Haan, Delete Karein</button>
+                <button id="confirmNoBtn" class="btn" style="background-color: var(--light-gray); color: var(--text-color);">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script>
+        const App = {
+            db: { userName: null, goals: [], diaryEntries: [], theme: 'light', jannahPoints: 0 },
+            elements: {},
+            asmaulHusna: [ {name: "Ar-Rahman", meaning: "The Beneficent"}, {name: "Ar-Rahim", meaning: "The Merciful"}, {name: "Al-Malik", meaning: "The King"}, {name: "Al-Quddus", meaning: "The Most Holy"}, {name: "As-Salam", meaning: "The Source of Peace"}, {name: "Al-Mu'min", meaning: "The Inspirer of Faith"}, {name: "Al-Muhaymin", meaning: "The Guardian"}, {name: "Al-Aziz", meaning: "The Victorious"}, {name: "Al-Jabbar", meaning: "The Compeller"}, {name: "Al-Mutakabbir", meaning: "The Greatest"} ],
+            init() { this.cacheDOMElements(); this.loadData(); this.attachEventListeners(); },
+            cacheDOMElements() {
+                this.elements = {
+                    mainAppContainer: document.getElementById('mainAppContainer'), greeting: document.getElementById('greeting'), tabs: document.querySelectorAll('.nav-tab'), sections: document.querySelectorAll('.app-section'), goalForm: document.getElementById('goalForm'), goalList: document.getElementById('goalList'), dailyName: document.getElementById('asmaAlHusna'), dailyMeaning: document.getElementById('asmaAlHusnaMeaning'), journeyContainer: document.getElementById('journeyProgressContainer'), diaryForm: document.getElementById('diaryEntryForm'), diaryList: document.getElementById('diaryEntryList'), themeSwitcher: document.getElementById('themeSwitcher'), welcomeModal: document.getElementById('welcomeModal'), strictModal: document.getElementById('strictModal'), notificationModal: document.getElementById('notificationModal'), confirmModal: document.getElementById('confirmModal'), resourceList: document.getElementById('resourceList'),
+                    jannahPoints: document.getElementById('jannahPoints'), activeGoals: document.getElementById('activeGoals'), bestStreak: document.getElementById('bestStreak')
+                };
+                this.elements.goalForm.innerHTML = `<div class="form-group"><label for="goalTitle">Aap kya chhodna/shuru karna chahte hain?</label><input type="text" id="goalTitle" placeholder="Jaise: 'Main gussa control karunga.'" required></div><div class="form-group"><label for="goalDuration">Kitne din ka Hadaf hai?</label><select id="goalDuration"><option value="0">Hamesha</option><option value="7">7 Din</option><option value="30">30 Din</option><option value="40">40 Din</option></select></div><div class="form-group"><label for="goalDifficulty">Mushkil</label><select id="goalDifficulty"><option value="easy">Aasan</option><option value="medium">Darmiyana</option><option value="hard">Mushkil</option></select></div><div class="form-group"><label for="penaltyType">Penalty (Saza)?</label><select id="penaltyType"><option value="prayer">Nafil Namaz</option><option value="money">Sadqa</option><option value="other">Kuch aur</option></select></div><div class="form-group" id="penaltyValueContainer"><label for="penaltyValue">Penalty ki Tafseel</label><input type="text" id="penaltyValue" required></div><div class="form-group"><label for="goalMode">Mode</label><select id="goalMode"><option value="medium">Medium</option><option value="strict">Strict</option></select></div><button type="submit" class="btn btn-primary">Hadaf Set Karein</button>`;
+                this.elements.strictModal.innerHTML = `<div class="modal-content"><h3>Strict Mode Contract 🕋</h3><p>Aap Allah ko Gawah banakar yeh ahad kar rahe hain.</p><div class="modal-contract" style="background: var(--bg-color); padding: 15px; border-radius: 8px; text-align: left; font-style: italic; color: var(--text-color); margin-bottom: 20px;">"Main Allah ko gawah maan kar kehta/kehti hoon ke main is aadat (<span id="contractGoalTitle" style="font-weight:bold;">...</span>) ko chhodne ki poori koshish karunga/karungi. Agar main yeh rule toda, to apni tauba nayi karunga/karungi aur tay shuda penalty (<span id="contractPenalty" style="font-weight:bold;">...</span>) ada karunga."</div><p>Kya aap is ahad ko qubool karte hain?</p><div style="display: flex; justify-content: center; gap: 15px;"><button id="acceptContractBtn" class="btn btn-primary">Qubool Hai ✅</button><button id="cancelContractBtn" class="btn" style="background-color: var(--danger-red); color: #fff;">Cancel ❌</button></div></div>`;
+                this.elements.notificationModal.innerHTML = `<div class="modal-content"><h3 id="notificationTitle"></h3><p id="notificationMessage"></p><button id="notificationCloseBtn" class="btn btn-primary">Theek Hai</button></div>`;
+            },
+            loadData() {
+                const localData = localStorage.getItem('noSinsDB');
+                const defaultDB = { userName: null, goals: [], diaryEntries: [], theme: 'light', jannahPoints: 0 };
+                if (localData) {
+                    try {
+                        const savedDB = JSON.parse(localData);
+                        this.db = { ...defaultDB, ...savedDB };
+                    } catch (e) { this.db = defaultDB; }
+                } else { this.db = defaultDB; }
+                
+                this.applyTheme();
+                
+                if (this.db.userName) {
+                    this.startApp();
+                } else {
+                    this.elements.welcomeModal.style.display = 'flex';
+                }
+            },
+            attachEventListeners() {
+                document.getElementById('welcomeForm').addEventListener('submit', (e) => this.handleWelcomeSubmit(e));
+                document.getElementById('notificationCloseBtn').addEventListener('click', () => this.elements.notificationModal.style.display = 'none');
+                this.elements.goalForm.addEventListener('submit', (e) => this.handleFormSubmit(e));
+                this.elements.strictModal.querySelector('#acceptContractBtn').addEventListener('click', () => this.acceptContract());
+                this.elements.strictModal.querySelector('#cancelContractBtn').addEventListener('click', () => this.elements.strictModal.style.display = 'none');
+                document.getElementById('downloadPdfBtn').addEventListener('click', () => this.generatePDF());
+                this.elements.themeSwitcher.addEventListener('click', () => this.toggleTheme());
+                this.elements.diaryForm.addEventListener('submit', (e) => this.saveDiaryEntry(e));
+                this.elements.goalForm.querySelector('#penaltyType').addEventListener('change', () => this.togglePenaltyInput());
+                this.elements.goalList.addEventListener('click', (e) => this.handleGoalActions(e));
+                this.elements.confirmModal.querySelector('#confirmNoBtn').addEventListener('click', () => this.elements.confirmModal.style.display = 'none');
+                this.elements.confirmModal.querySelector('#confirmYesBtn').addEventListener('click', () => this.handleConfirmDelete());
+            },
+            startApp() {
+                this.elements.welcomeModal.style.display = 'none';
+                this.elements.mainAppContainer.style.display = 'block';
+                this.updateGreeting();
+                this.setupNav();
+                this.loadDailyContent();
+                this.renderDashboard();
+                this.renderDiary();
+                this.renderResources();
+                this.togglePenaltyInput();
+                this.updateDashboardStats();
+            },
+            handleWelcomeSubmit(e) { e.preventDefault(); let name = document.getElementById('userNameInput').value; if (name.trim() === "") name = "Allah ka Banda"; this.db.userName = name; this.saveData(); this.startApp(); },
+            updateGreeting() { this.elements.greeting.textContent = `Assalamu Alaikum, ${this.db.userName} 🌙`; },
+            loadDailyContent() { const dayIndex = new Date().getDate() % this.asmaulHusna.length; this.elements.dailyName.textContent = this.asmaulHusna[dayIndex].name; this.elements.dailyMeaning.textContent = this.asmaulHusna[dayIndex].meaning; },
+            setupNav() { this.elements.tabs.forEach(tab => { tab.addEventListener('click', () => { const target = tab.getAttribute('data-target'); this.elements.tabs.forEach(t => t.classList.remove('active')); this.elements.sections.forEach(s => s.classList.remove('active')); tab.classList.add('active'); document.getElementById(target).classList.add('active'); if (target === 'journey') this.renderJourney(); }); }); },
+            handleFormSubmit(e) { e.preventDefault(); const mode = this.elements.goalForm.querySelector('#goalMode').value; const title = this.elements.goalForm.querySelector('#goalTitle').value; const penalty = this.elements.goalForm.querySelector('#penaltyValue').value; if (mode === 'strict') { this.elements.strictModal.querySelector('#contractGoalTitle').textContent = title; this.elements.strictModal.querySelector('#contractPenalty').textContent = penalty; this.elements.strictModal.style.display = 'flex'; } else { this.saveGoal(false); } },
+            acceptContract() { this.saveGoal(true); this.elements.strictModal.style.display = 'none'; },
+            saveGoal(isStrict) {
+                const form = this.elements.goalForm;
+                const newGoal = { id: Date.now(), title: form.querySelector('#goalTitle').value, startDate: new Date().toISOString().split('T')[0], duration: parseInt(form.querySelector('#goalDuration').value, 10), difficulty: form.querySelector('#goalDifficulty').value, penaltyType: form.querySelector('#penaltyType').value, penaltyValue: form.querySelector('#penaltyValue').value, mode: isStrict ? 'strict' : 'medium', contractSigned: isStrict, progress: [] };
+                this.db.goals.push(newGoal); this.saveData(); this.showNotification('Masha\'Allah!', 'Aapka naya hadaf set ho gaya hai.', 'success'); form.reset(); this.togglePenaltyInput(); this.renderDashboard(); document.querySelector('.nav-tab[data-target="dashboard"]').click(); this.updateDashboardStats();
+            },
+            renderDashboard() {
+                this.elements.goalList.innerHTML = ''; if (this.db.goals.length === 0) { this.elements.goalList.innerHTML = '<p style="text-align:center; color:var(--text-color); opacity: 0.7;">Aapne abhi tak koi hadaf set nahi kiya.</p>'; return; }
+                const today = new Date().toISOString().split('T')[0];
+                this.db.goals.forEach(goal => {
+                    const goalCard = document.createElement('div'); goalCard.className = 'goal-card';
+                    const streak = this.calculateStreak(goal);
+                    const todayEntry = goal.progress.find(p => p.date === today); let actionsDisabled = todayEntry ? 'disabled' : '';
+                    let statusMessage = todayEntry ? (todayEntry.status === 'completed' ? `<span style="color:var(--success-green); font-weight:bold;">Alhamdulillah, Aaj poora hua.</span>` : `<span style="color:var(--danger-red); font-weight:bold;">Astaghfirullah, Aaj miss hua.</span>`) : 'Aaj ke liye mark karein:';
+                    goalCard.innerHTML = `<div class="goal-header"><h3>${goal.title}</h3><div class="goal-meta"><span class="badge ${goal.difficulty}">${goal.difficulty}</span><div class="streak-counter" title="Current Streak">🔥<span>${streak}</span></div><button class="delete-goal-btn" data-goal-id="${goal.id}" data-action="delete" title="Delete Goal">🗑️</button></div></div><div class="goal-details" style="font-size: 0.9rem; opacity: 0.8; margin: 10px 0;"><strong>Penalty:</strong> ${goal.penaltyValue} | <strong>Duration:</strong> ${goal.duration > 0 ? `${goal.duration} Din` : 'Hamesha'}</div><div class="progress-calendar-container"><h4>Is Mahine ki Progress</h4><div class="progress-calendar">${this.generateProgressCalendar(goal)}</div></div><div style="text-align:center; margin:15px 0 10px;">${statusMessage}</div><div style="display: flex; gap: 10px;"><button class="btn" style="flex-grow: 1; background-color: var(--success-green); color: #fff;" data-goal-id="${goal.id}" data-action="mark-complete" ${actionsDisabled}>Poora Kiya ✅</button><button class="btn" style="flex-grow: 1; background-color: var(--danger-red); color: #fff;" data-goal-id="${goal.id}" data-action="mark-missed" ${actionsDisabled}>Miss Hua ❌</button></div>`;
+                    this.elements.goalList.appendChild(goalCard);
+                });
+            },
+            handleGoalActions(e) {
+                const target = e.target.closest('[data-action]'); if (!target) return;
+                const action = target.dataset.action; const goalId = parseInt(target.dataset.goalId, 10);
+                if (action === 'delete') this.confirmDeleteGoal(goalId);
+                else if (action === 'mark-complete') this.markDay(goalId, 'completed');
+                else if (action === 'mark-missed') this.markDay(goalId, 'missed');
+            },
+            confirmDeleteGoal(goalId) { this.elements.confirmModal.querySelector('#confirmYesBtn').dataset.goalIdToDelete = goalId; this.elements.confirmModal.style.display = 'flex'; },
+            handleConfirmDelete() { const goalId = parseInt(this.elements.confirmModal.querySelector('#confirmYesBtn').dataset.goalIdToDelete, 10); this.deleteGoal(goalId); this.elements.confirmModal.style.display = 'none'; },
+            deleteGoal(goalId) { this.db.goals = this.db.goals.filter(goal => goal.id !== goalId); this.saveData(); this.renderDashboard(); this.updateDashboardStats(); this.showNotification('Ho Gaya', 'Aapka hadaf delete kar diya gaya hai.', 'info'); },
+            generateProgressCalendar(goal) {
+                const now = new Date(); const month = now.getMonth(); const year = now.getFullYear(); const daysInMonth = new Date(year, month + 1, 0).getDate(); const firstDayOfMonth = new Date(year, month, 1).getDay();
+                let html = 'S M T W T F S'.split(' ').map(d => `<div class="calendar-header">${d}</div>`).join('');
+                for (let i = 0; i < firstDayOfMonth; i++) { html += '<div></div>'; }
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const dateStr = new Date(Date.UTC(year, month, day)).toISOString().split('T')[0];
+                    const progressEntry = goal.progress.find(p => p.date === dateStr);
+                    let classes = 'calendar-day';
+                    if (progressEntry) classes += ` ${progressEntry.status}`;
+                    if (dateStr === new Date().toISOString().split('T')[0]) classes += ' today';
+                    html += `<div class="${classes}">${day}</div>`;
+                }
+                return html;
+            },
+            markDay(goalId, status) {
+                const goal = this.db.goals.find(g => g.id === goalId); if (!goal) return;
+                const today = new Date().toISOString().split('T')[0];
+                if (goal.progress.some(p => p.date === today)) { this.showNotification('Dhyan Dein', 'Aap aaj ke liye pehle hi mark kar chuke hain.', 'info'); return; }
+                goal.progress.push({ date: today, status: status });
+                if (status === 'completed') {
+                    this.db.jannahPoints += 10;
+                    this.showNotification('Alhamdulillah!', 'Allah qubool farmaye. +10 Jannah Points!', 'success');
+                } else {
+                    this.showNotification('Astaghfirullah', `Apni penalty yaad rakhein: ${goal.penaltyValue}<br>Allah se tauba karein aur koshish jaari rakhein.`, 'info');
+                }
+                this.saveData(); this.renderDashboard(); this.updateDashboardStats();
+            },
+            calculateStreak(goal) {
+                let streak = 0; const sortedProgress = goal.progress.slice().sort((a, b) => new Date(b.date) - new Date(a.date)); if (!sortedProgress.length) return 0;
+                const today = new Date(); today.setUTCHours(0, 0, 0, 0);
+                let lastCompletedDate = null;
+                for (const entry of sortedProgress) {
+                    if (entry.status !== 'completed') continue;
+                    const entryDate = new Date(entry.date); entryDate.setUTCHours(0,0,0,0);
+                    if (!lastCompletedDate) {
+                        const diffDays = Math.round((today.getTime() - entryDate.getTime()) / 86400000);
+                        if (diffDays <= 1) { streak++; lastCompletedDate = entryDate; } else { break; }
+                    } else {
+                        const diffDays = Math.round((lastCompletedDate.getTime() - entryDate.getTime()) / 86400000);
+                        if (diffDays === 1) { streak++; lastCompletedDate = entryDate; } else { break; }
+                    }
+                }
+                return streak;
+            },
+            updateDashboardStats() {
+                this.elements.jannahPoints.textContent = this.db.jannahPoints;
+                this.elements.activeGoals.textContent = this.db.goals.length;
+                const bestStreak = this.db.goals.reduce((max, goal) => {
+                    const currentStreak = this.calculateStreak(goal);
+                    return currentStreak > max ? currentStreak : max;
+                }, 0);
+                this.elements.bestStreak.textContent = bestStreak;
+            },
+            saveDiaryEntry(e) { e.preventDefault(); const text = document.getElementById('diaryText').value; if (!text.trim()) return; this.db.diaryEntries.unshift({ id: Date.now(), date: new Date().toISOString(), text }); this.saveData(); this.renderDiary(); document.getElementById('diaryText').value = ''; this.showNotification('Alhamdulillah', 'Aapke ehsaas mehfooz ho gaye hain.', 'success'); },
+            renderDiary() { this.elements.diaryList.innerHTML = ''; if (this.db.diaryEntries.length === 0) { this.elements.diaryList.innerHTML = '<p style="text-align:center; opacity: 0.7; margin-top: 20px;">Aapki diary abhi khali hai.</p>'; return; } this.db.diaryEntries.forEach(entry => { const card = document.createElement('div'); card.className = 'goal-card diary-card'; const date = new Date(entry.date); card.innerHTML = `<div class="date">${date.toLocaleDateString('ur-PK', { day: 'numeric', month: 'long', year: 'numeric' })}</div><div class="text">${entry.text.replace(/\n/g, '<br>')}</div>`; this.elements.diaryList.appendChild(card); }); },
+            renderResources() {
+                const resources = [ { title: 'Quran ki Tilawat sunein', url: 'https://quran.com' }, { title: 'Hadith ka mutala karein', url: 'https://sunnah.com' }, { title: 'Islamic lectures (Bayan)', url: 'https://www.youtube.com/user/TheMercifulServant' } ];
+                this.elements.resourceList.innerHTML = resources.map(r => `<div class="resource-card"><h3>${r.title}</h3><a href="${r.url}" target="_blank">Yahan visit karein &rarr;</a></div>`).join('');
+            },
+            togglePenaltyInput() { const type = this.elements.goalForm.querySelector('#penaltyType').value; const valueInput = this.elements.goalForm.querySelector('#penaltyValue'); if (type === 'prayer') { valueInput.value = "2 Raka'at Nafil Tauba"; } else if (type === 'money') { valueInput.value = "Rs. 100 Sadqa"; } else { valueInput.value = ""; valueInput.placeholder = "Koi aur penalty likhein..."; } },
+            toggleTheme() { this.db.theme = this.db.theme === 'light' ? 'dark' : 'light'; this.applyTheme(); this.saveData(); },
+            applyTheme() { document.body.className = this.db.theme === 'dark' ? 'dark-mode' : ''; this.elements.themeSwitcher.textContent = this.db.theme === 'dark' ? '☀️' : '🌓'; },
+            saveData() { localStorage.setItem('noSinsDB', JSON.stringify(this.db)); },
+            showNotification(title, message, type = 'info') { const modalContent = this.elements.notificationModal.querySelector('.modal-content'); modalContent.className = 'modal-content'; modalContent.classList.add(type); document.getElementById('notificationTitle').innerHTML = title; document.getElementById('notificationMessage').innerHTML = message; this.elements.notificationModal.style.display = 'flex'; },
+            renderJourney() { this.elements.journeyContainer.innerHTML = ''; if (this.db.goals.length === 0) { this.elements.journeyContainer.innerHTML = '<p style="text-align:center; opacity:0.7;">Aapka safar abhi shuru nahi hua.</p>'; return; } this.db.goals.forEach(goal => { const completedDays = goal.progress.filter(p => p.status === 'completed').length; const missedDays = goal.progress.filter(p => p.status === 'missed').length; const summaryEl = document.createElement('div'); summaryEl.className = 'goal-card'; summaryEl.innerHTML = `<h3>${goal.title}</h3><div><strong>Mode:</strong> ${goal.mode} ${goal.contractSigned ? '(Contract Signed)' : ''} <br><strong>Poora Kiya:</strong> ${completedDays} din <br><strong>Miss Hua:</strong> ${missedDays} din</div>`; this.elements.journeyContainer.appendChild(summaryEl); }); },
+            generatePDF() {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF(); let y = 20;
+                doc.setFont('helvetica', 'bold'); doc.setFontSize(22);
+                doc.text('No Sins - Roohani Safar Report', 105, y, { align: 'center' }); y += 10;
+                doc.setFont('helvetica', 'normal'); doc.setFontSize(14);
+                doc.text(`Report for: ${this.db.userName}`, 105, y, { align: 'center' }); y += 15;
+                if (this.db.goals.length === 0) { doc.text('Aapne abhi tak koi hadaf set nahi kiya.', 10, y); } else {
+                    this.db.goals.forEach((goal, index) => {
+                        if (y > 270) { doc.addPage(); y = 20; }
+                        const completedDays = goal.progress.filter(p => p.status === 'completed').length;
+                        const missedDays = goal.progress.filter(p => p.status === 'missed').length;
+                        const streak = this.calculateStreak(goal);
+                        doc.setFont('helvetica', 'bold'); doc.setFontSize(16);
+                        doc.text(`Hadaf ${index + 1}: ${goal.title}`, 14, y); y += 8;
+                        doc.setFont('helvetica', 'normal'); doc.setFontSize(12);
+                        doc.text(`- Shuruwat ki Tarikh: ${new Date(goal.startDate).toLocaleDateString('ur-PK')}`, 18, y); y += 6;
+                        doc.text(`- Duration: ${goal.duration > 0 ? `${goal.duration} Din` : 'Hamesha'}`, 18, y); y += 6;
+                        doc.text(`- Current Streak: ${streak} din`, 18, y); y += 6;
+                        doc.text(`- Kul Kamyab Din: ${completedDays}`, 18, y); y += 6;
+                        doc.text(`- Kul Missed Din: ${missedDays}`, 18, y); y += 12;
+                    });
+                }
+                doc.save(`${this.db.userName}_safar_report.pdf`);
+                this.showNotification('PDF Generated!', 'Aapki report download ho rahi hai.', 'success');
+            }
+        };
+        App.init();
+    </script>
+</body>
+</html>
+
