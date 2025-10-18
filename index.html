@@ -136,7 +136,8 @@
         <footer><p>May Allah accept our efforts. Every small step towards righteousness is a victory.</p><p class="quote">"And whoever relies upon Allah - then He is sufficient for him." - Quran 65:3</p></footer>
     </div>
 
-    <div id="welcomeModal" class="modal-overlay" style="display: flex;"><div class="modal-content"><h3>Bismillah!</h3><p>Apna roohani safar shuru karne ke liye neeche apna naam likhein.</p><form id="welcomeForm"><div class="form-group"><input type="text" id="userNameInput" placeholder="Aapka Naam" required style="text-align: center; font-size: 1.2rem;"></div><button type="submit" class="btn btn-primary">Safar Shuru Karein</button></form></div></div>
+    <div id="disclaimerModal" class="modal-overlay" style="display: none;"><div class="modal-content"><h3>Disclaimer ❗</h3><p style="text-align: left; margin-bottom: 20px;">Yeh sirf ek koshish hai gunah se bachne aur apne aapko badalne se mutallik. Agar isme koi bhi issue ho, ya meri koshish me koi deeni masla nikle, to bejhijak contact karein.</p><p style="margin-bottom: 20px;"><strong>Email:</strong> eventify07@gmail.com</p><button id="disclaimerProceedBtn" class="btn btn-primary">Aage Badhein</button></div></div>
+    <div id="welcomeModal" class="modal-overlay" style="display: none;"><div class="modal-content"><h3>Bismillah!</h3><p>Apna roohani safar shuru karne ke liye neeche apna naam likhein.</p><form id="welcomeForm"><div class="form-group"><input type="text" id="userNameInput" placeholder="Aapka Naam" required style="text-align: center; font-size: 1.2rem;"></div><button type="submit" class="btn btn-primary">Safar Shuru Karein</button></form></div></div>
     <div id="strictModal" class="modal-overlay"></div>
     <div id="notificationModal" class="modal-overlay"></div>
     <div id="confirmModal" class="modal-overlay">
@@ -160,7 +161,8 @@
             cacheDOMElements() {
                 this.elements = {
                     mainAppContainer: document.getElementById('mainAppContainer'), greeting: document.getElementById('greeting'), tabs: document.querySelectorAll('.nav-tab'), sections: document.querySelectorAll('.app-section'), goalForm: document.getElementById('goalForm'), goalList: document.getElementById('goalList'), dailyName: document.getElementById('asmaAlHusna'), dailyMeaning: document.getElementById('asmaAlHusnaMeaning'), journeyContainer: document.getElementById('journeyProgressContainer'), diaryForm: document.getElementById('diaryEntryForm'), diaryList: document.getElementById('diaryEntryList'), themeSwitcher: document.getElementById('themeSwitcher'), welcomeModal: document.getElementById('welcomeModal'), strictModal: document.getElementById('strictModal'), notificationModal: document.getElementById('notificationModal'), confirmModal: document.getElementById('confirmModal'), resourceList: document.getElementById('resourceList'),
-                    jannahPoints: document.getElementById('jannahPoints'), activeGoals: document.getElementById('activeGoals'), bestStreak: document.getElementById('bestStreak'), downloadDiaryPdfBtn: document.getElementById('downloadDiaryPdfBtn')
+                    jannahPoints: document.getElementById('jannahPoints'), activeGoals: document.getElementById('activeGoals'), bestStreak: document.getElementById('bestStreak'), downloadDiaryPdfBtn: document.getElementById('downloadDiaryPdfBtn'),
+                    disclaimerModal: document.getElementById('disclaimerModal'), disclaimerProceedBtn: document.getElementById('disclaimerProceedBtn')
                 };
                 this.elements.goalForm.innerHTML = `<div class="form-group"><label for="goalTitle">Aap kya chhodna/shuru karna chahte hain?</label><input type="text" id="goalTitle" placeholder="Jaise: 'Main gussa control karunga.'" required></div><div class="form-group"><label for="goalDuration">Kitne din ka Hadaf hai?</label><select id="goalDuration"><option value="0">Hamesha</option><option value="7">7 Din</option><option value="30">30 Din</option><option value="40">40 Din</option></select></div><div class="form-group"><label for="goalDifficulty">Mushkil</label><select id="goalDifficulty"><option value="easy">Aasan</option><option value="medium">Darmiyana</option><option value="hard">Mushkil</option></select></div><div class="form-group"><label for="penaltyType">Penalty (Saza)?</label><select id="penaltyType"><option value="prayer">Nafil Namaz</option><option value="money">Sadqa</option><option value="other">Kuch aur</option></select></div><div class="form-group" id="penaltyValueContainer"><label for="penaltyValue">Penalty ki Tafseel</label><input type="text" id="penaltyValue" required></div><div class="form-group"><label for="goalMode">Mode</label><select id="goalMode"><option value="medium">Medium</option><option value="strict">Strict</option></select></div><button type="submit" class="btn btn-primary">Hadaf Set Karein</button>`;
                 this.elements.strictModal.innerHTML = `<div class="modal-content"><h3>Strict Mode Contract 🕋</h3><p>Aap Allah ko Gawah banakar yeh ahad kar rahe hain.</p><div class="modal-contract" style="background: var(--bg-color); padding: 15px; border-radius: 8px; text-align: left; font-style: italic; color: var(--text-color); margin-bottom: 20px;">"Main Allah ko gawah maan ke yeh niyat karta/karti hu ki main is gunah (<span id="contractGoalTitle" style="font-weight:bold;">...</span>) ko chhodne ki poori koshish karunga/karungi. Agar main yeh ahad toda, to apni tauba nayi karunga/karungi aur tay shuda penalty (<span id="contractPenalty" style="font-weight:bold;">...</span>) ada karunga/karungi."</div><p>Kya aap is ahad ko qubool karte hain?</p><div style="display: flex; justify-content: center; gap: 15px;"><button id="acceptContractBtn" class="btn btn-primary">Qubool Hai ✅</button><button id="cancelContractBtn" class="btn" style="background-color: var(--danger-red); color: #fff;">Cancel ❌</button></div></div>`;
@@ -175,14 +177,28 @@
                         this.db = { ...defaultDB, ...savedDB };
                     } catch (e) { this.db = defaultDB; }
                 } else { this.db = defaultDB; }
+                
                 this.applyTheme();
-                if (this.db.userName) {
+                
+                if (localStorage.getItem('disclaimerSeen') !== 'true') {
+                    this.elements.disclaimerModal.style.display = 'flex';
+                } else if (this.db.userName) {
                     this.startApp();
                 } else {
                     this.elements.welcomeModal.style.display = 'flex';
                 }
             },
             attachEventListeners() {
+                this.elements.disclaimerProceedBtn.addEventListener('click', () => {
+                    localStorage.setItem('disclaimerSeen', 'true');
+                    this.elements.disclaimerModal.style.display = 'none';
+                    if (!this.db.userName) {
+                        this.elements.welcomeModal.style.display = 'flex';
+                    } else {
+                        this.startApp();
+                    }
+                });
+
                 document.getElementById('welcomeForm').addEventListener('submit', (e) => this.handleWelcomeSubmit(e));
                 document.getElementById('notificationCloseBtn').addEventListener('click', () => this.elements.notificationModal.style.display = 'none');
                 this.elements.goalForm.addEventListener('submit', (e) => this.handleFormSubmit(e));
@@ -330,7 +346,7 @@
                         doc.text(`- Mode: ${goal.mode}`, 18, y); y += 6;
                          if (goal.contractSigned) {
                             doc.setFont('helvetica', 'italic');
-                            const contractText = `Niyat: "Main Allah ko gawah maan ke yeh niyat karta/karti hu ki main is gunah ko chhodne ki poori koshish karunga/karungi."`;
+                            const contractText = `Niyat: "Main Allah ko gawah maan ke yeh niyat karta/karti hu ki main is gunah ko chhodne ki poori koshish karunga/karungi.(yeh sirf dilme iraade pukta ke liye hain)"`;
                             const splitText = doc.splitTextToSize(contractText, 175);
                             doc.text(splitText, 18, y);
                             y += (splitText.length * 5); 
