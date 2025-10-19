@@ -136,7 +136,7 @@
         <footer><p>May Allah accept our efforts. Every small step towards righteousness is a victory.</p><p class="quote">"And whoever relies upon Allah - then He is sufficient for him." - Quran 65:3</p></footer>
     </div>
 
-    <div id="disclaimerModal" class="modal-overlay" style="display: none;"><div class="modal-content"><h3>Disclaimer ❗</h3><p style="text-align: left; margin-bottom: 20px;">Yeh sirf ek koshish hai gunah se bachne aur apne aapko badalne se mutallik. Agar isme koi bhi issue ho, ya meri koshish me koi deeni masla nikle, to bejhijak contact karein.</p><p style="margin-bottom: 20px;"><strong>Email:</strong> eventify07@gmail.com</p><button id="disclaimerProceedBtn" class="btn btn-primary">Aage Badhein</button></div></div>
+    <div id="disclaimerModal" class="modal-overlay" style="display: none;"><div class="modal-content"><h3>Disclaimer ❗</h3><p style="text-align: left; margin-bottom: 20px;">Yeh app aapki madad ke liye banaya gaya hai taake aap apni zaati behteri (self-improvement) me consistent rahen. Is app ka maqsad ilm ya deeni fatwa dena nahi — agar kisi mas'ale me shubha ho to apne scholar ya imam se rujoo karein.</p><p style="margin-bottom: 20px;"><strong>Email:</strong> eventify07@gmail.com</p><button id="disclaimerProceedBtn" class="btn btn-primary">Aage Badhein</button></div></div>
     <div id="welcomeModal" class="modal-overlay" style="display: none;"><div class="modal-content"><h3>Bismillah!</h3><p>Apna roohani safar shuru karne ke liye neeche apna naam likhein.</p><form id="welcomeForm"><div class="form-group"><input type="text" id="userNameInput" placeholder="Aapka Naam" required style="text-align: center; font-size: 1.2rem;"></div><button type="submit" class="btn btn-primary">Safar Shuru Karein</button></form></div></div>
     <div id="strictModal" class="modal-overlay"></div>
     <div id="notificationModal" class="modal-overlay"></div>
@@ -165,7 +165,8 @@
                     disclaimerModal: document.getElementById('disclaimerModal'), disclaimerProceedBtn: document.getElementById('disclaimerProceedBtn')
                 };
                 this.elements.goalForm.innerHTML = `<div class="form-group"><label for="goalTitle">Aap kya chhodna/shuru karna chahte hain?</label><input type="text" id="goalTitle" placeholder="Jaise: 'Main gussa control karunga.'" required></div><div class="form-group"><label for="goalDuration">Kitne din ka Hadaf hai?</label><select id="goalDuration"><option value="0">Hamesha</option><option value="7">7 Din</option><option value="30">30 Din</option><option value="40">40 Din</option></select></div><div class="form-group"><label for="goalDifficulty">Mushkil</label><select id="goalDifficulty"><option value="easy">Aasan</option><option value="medium">Darmiyana</option><option value="hard">Mushkil</option></select></div><div class="form-group"><label for="penaltyType">Penalty (Saza)?</label><select id="penaltyType"><option value="prayer">Nafil Namaz</option><option value="money">Sadqa</option><option value="other">Kuch aur</option></select></div><div class="form-group" id="penaltyValueContainer"><label for="penaltyValue">Penalty ki Tafseel</label><input type="text" id="penaltyValue" required></div><div class="form-group"><label for="goalMode">Mode</label><select id="goalMode"><option value="medium">Medium</option><option value="strict">Strict</option></select></div><button type="submit" class="btn btn-primary">Hadaf Set Karein</button>`;
-                this.elements.strictModal.innerHTML = `<div class="modal-content"><h3>Strict Mode Contract 🕋</h3><p>Aap Allah ko Gawah banakar yeh ahad kar rahe hain.</p><div class="modal-contract" style="background: var(--bg-color); padding: 15px; border-radius: 8px; text-align: left; font-style: italic; color: var(--text-color); margin-bottom: 20px;">"Main Allah ko gawah maan ke yeh niyat karta/karti hu ki main is gunah (<span id="contractGoalTitle" style="font-weight:bold;">...</span>) ko chhodne ki poori koshish karunga/karungi. Agar main yeh ahad toda, to apni tauba nayi karunga/karungi aur tay shuda penalty (<span id="contractPenalty" style="font-weight:bold;">...</span>) ada karunga/karungi."</div><p>Kya aap is ahad ko qubool karte hain?</p><div style="display: flex; justify-content: center; gap: 15px;"><button id="acceptContractBtn" class="btn btn-primary">Qubool Hai ✅</button><button id="cancelContractBtn" class="btn" style="background-color: var(--danger-red); color: #fff;">Cancel ❌</button></div></div>`;
+                // Updated strict modal wording: respectful, clear, and non-coercive language
+                this.elements.strictModal.innerHTML = `<div class="modal-content"><h3>Strict Mode — Zaati Niyat</h3><p style="text-align: left; margin-bottom: 12px;">Yeh contract ek zaati niyat hai jo aap khud apne andar mazboot karte hain, taake aap apni behtri ki koshish consistent rakhein. Is niyat ka maqsad khud sudharna hai; yeh kisi qanooni ya zabti pabandi ki jagah nahi leta.</p><div class="modal-contract" style="background: var(--bg-color); padding: 15px; border-radius: 8px; text-align: left; font-style: italic; color: var(--text-color); margin-bottom: 18px;">"Main, <strong id='contractGoalTitle'>...</strong>, apne Rabb ke samne niyat karta/karti hoon ke main is burai ko chhorne ki poori koshish karunga/karungi. Agar main is niyat me kamzor pada to main khuloos ke saath tauba karunga/karungi aur jo sazā maine pehle tay ki thi ( <strong id='contractPenalty'>...</strong> ) usay ada karne ki koshish karunga/karungi."</div><p style="margin-bottom: 12px;">Kya aap is niyat ko qubool karte hain (aap khud apne irade ko mazboot bana rahe hain)?</p><div style="display: flex; justify-content: center; gap: 15px;"><button id="acceptContractBtn" class="btn btn-primary">Qubool Hai ✅</button><button id="cancelContractBtn" class="btn" style="background-color: var(--danger-red); color: #fff;">Cancel ❌</button></div></div>`;
                 this.elements.notificationModal.innerHTML = `<div class="modal-content"><h3 id="notificationTitle"></h3><p id="notificationMessage"></p><button id="notificationCloseBtn" class="btn btn-primary">Theek Hai</button></div>`;
             },
             loadData() {
@@ -200,10 +201,18 @@
                 });
 
                 document.getElementById('welcomeForm').addEventListener('submit', (e) => this.handleWelcomeSubmit(e));
-                document.getElementById('notificationCloseBtn').addEventListener('click', () => this.elements.notificationModal.style.display = 'none');
+                // notificationCloseBtn might not exist until modal is created; guard it
+                document.addEventListener('click', (ev) => {
+                    if (ev.target && ev.target.id === 'notificationCloseBtn') {
+                        this.elements.notificationModal.style.display = 'none';
+                    }
+                });
                 this.elements.goalForm.addEventListener('submit', (e) => this.handleFormSubmit(e));
-                this.elements.strictModal.querySelector('#acceptContractBtn').addEventListener('click', () => this.acceptContract());
-                this.elements.strictModal.querySelector('#cancelContractBtn').addEventListener('click', () => this.elements.strictModal.style.display = 'none');
+                // accept/cancel contract buttons exist after strictModal.innerHTML set; use event delegation
+                this.elements.strictModal.addEventListener('click', (ev) => {
+                    if (ev.target && ev.target.id === 'acceptContractBtn') this.acceptContract();
+                    if (ev.target && ev.target.id === 'cancelContractBtn') this.elements.strictModal.style.display = 'none';
+                });
                 document.getElementById('downloadPdfBtn').addEventListener('click', () => this.generatePDF());
                 this.elements.downloadDiaryPdfBtn.addEventListener('click', () => this.generateDiaryPDF());
                 this.elements.themeSwitcher.addEventListener('click', () => this.toggleTheme());
@@ -229,7 +238,13 @@
             updateGreeting() { this.elements.greeting.textContent = `Assalamu Alaikum, ${this.db.userName} 🌙`; },
             loadDailyContent() { const dayIndex = new Date().getDate() % this.asmaulHusna.length; this.elements.dailyName.textContent = this.asmaulHusna[dayIndex].name; this.elements.dailyMeaning.textContent = this.asmaulHusna[dayIndex].meaning; },
             setupNav() { this.elements.tabs.forEach(tab => { tab.addEventListener('click', () => { const target = tab.getAttribute('data-target'); this.elements.tabs.forEach(t => t.classList.remove('active')); this.elements.sections.forEach(s => s.classList.remove('active')); tab.classList.add('active'); document.getElementById(target).classList.add('active'); if (target === 'journey') this.renderJourney(); }); }); },
-            handleFormSubmit(e) { e.preventDefault(); const mode = this.elements.goalForm.querySelector('#goalMode').value; const title = this.elements.goalForm.querySelector('#goalTitle').value; const penalty = this.elements.goalForm.querySelector('#penaltyValue').value; if (mode === 'strict') { this.elements.strictModal.querySelector('#contractGoalTitle').textContent = title; this.elements.strictModal.querySelector('#contractPenalty').textContent = penalty; this.elements.strictModal.style.display = 'flex'; } else { this.saveGoal(false); } },
+            handleFormSubmit(e) { e.preventDefault(); const mode = this.elements.goalForm.querySelector('#goalMode').value; const title = this.elements.goalForm.querySelector('#goalTitle').value; const penalty = this.elements.goalForm.querySelector('#penaltyValue').value; if (mode === 'strict') { // fill contract placeholders and show modal
+                    const contractTitleEl = this.elements.strictModal.querySelector('#contractGoalTitle');
+                    const contractPenaltyEl = this.elements.strictModal.querySelector('#contractPenalty');
+                    if (contractTitleEl) contractTitleEl.textContent = title;
+                    if (contractPenaltyEl) contractPenaltyEl.textContent = penalty;
+                    this.elements.strictModal.style.display = 'flex';
+                } else { this.saveGoal(false); } },
             acceptContract() { this.saveGoal(true); this.elements.strictModal.style.display = 'none'; },
             saveGoal(isStrict) {
                 const form = this.elements.goalForm;
@@ -321,7 +336,7 @@
             toggleTheme() { this.db.theme = this.db.theme === 'light' ? 'dark' : 'light'; this.applyTheme(); this.saveData(); },
             applyTheme() { document.body.className = this.db.theme === 'dark' ? 'dark-mode' : ''; this.elements.themeSwitcher.textContent = this.db.theme === 'dark' ? '☀️' : '🌓'; },
             saveData() { localStorage.setItem('noSinsDB', JSON.stringify(this.db)); },
-            showNotification(title, message, type = 'info') { const modalContent = this.elements.notificationModal.querySelector('.modal-content'); modalContent.className = 'modal-content'; modalContent.classList.add(type); document.getElementById('notificationTitle').innerHTML = title; document.getElementById('notificationMessage').innerHTML = message; this.elements.notificationModal.style.display = 'flex'; },
+            showNotification(title, message, type = 'info') { const modalContent = this.elements.notificationModal.querySelector('.modal-content'); if (!modalContent) return; modalContent.className = 'modal-content'; modalContent.classList.add(type); document.getElementById('notificationTitle').innerHTML = title; document.getElementById('notificationMessage').innerHTML = message; this.elements.notificationModal.style.display = 'flex'; },
             renderJourney() { this.elements.journeyContainer.innerHTML = ''; if (this.db.goals.length === 0) { this.elements.journeyContainer.innerHTML = '<p style="text-align:center; opacity:0.7;">Aapka safar abhi shuru nahi hua.</p>'; return; } this.db.goals.forEach(goal => { const completedDays = goal.progress.filter(p => p.status === 'completed').length; const missedDays = goal.progress.filter(p => p.status === 'missed').length; const summaryEl = document.createElement('div'); summaryEl.className = 'goal-card'; summaryEl.innerHTML = `<h3>${goal.title}</h3><div><strong>Mode:</strong> ${goal.mode} ${goal.contractSigned ? '(Contract Signed)' : ''} <br><strong>Poora Kiya:</strong> ${completedDays} din <br><strong>Miss Hua:</strong> ${missedDays} din</div>`; this.elements.journeyContainer.appendChild(summaryEl); }); },
             generatePDF() {
                 const { jsPDF } = window.jspdf;
@@ -346,7 +361,7 @@
                         doc.text(`- Mode: ${goal.mode}`, 18, y); y += 6;
                          if (goal.contractSigned) {
                             doc.setFont('helvetica', 'italic');
-                            const contractText = `Niyat: "Main Allah ko gawah maan ke yeh niyat karta/karti hu ki main is gunah ko chhodne ki poori koshish karunga/karungi.(yeh sirf dilme iraade pukta ke liye hain)"`;
+                            const contractText = `Niyat: "Main apne Rab ke samne niyat karta/karti hoon ke main is burai ko chhorne ki poori koshish karunga/karungi. Agar main nakaam hua to main tauba karunga/karungi aur tay shuda saza ada karunga/karungi."`;
                             const splitText = doc.splitTextToSize(contractText, 175);
                             doc.text(splitText, 18, y);
                             y += (splitText.length * 5); 
@@ -393,4 +408,3 @@
     </script>
 </body>
 </html>
-
