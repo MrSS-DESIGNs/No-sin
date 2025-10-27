@@ -26,6 +26,12 @@
         header h2 { font-size: 1.1rem; color: var(--text-color); opacity: 0.8; }
         .theme-switcher { font-size: 1.8rem; cursor: pointer; background: var(--light-gray); border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; }
         
+        /* --- CSS CHANGE HERE --- */
+        .icon-btn {
+            font-size: 1.8rem; cursor: pointer; background: var(--light-gray); border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;
+        }
+        /* --- END CSS CHANGE --- */
+
         .dashboard-stats {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
@@ -95,14 +101,46 @@
         footer { text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--light-gray); }
         footer p { font-size: 0.9rem; color: var(--text-color); opacity: 0.7; }
         footer .quote { font-style: italic; margin-top: 10px; }
+        
+        /* --- CSS CHANGE HERE --- */
+        /* Styles for How to Use modal content */
+        #howToUseBody h4 {
+            color: var(--heading-color);
+            margin-top: 15px;
+            margin-bottom: 5px;
+        }
+        #howToUseBody p, #howToUseBody li {
+            color: var(--text-color);
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+        #howToUseBody ul {
+            padding-left: 20px; /* List indent */
+        }
+        #howToUseBody code {
+            background-color: var(--bg-color);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+        .quote { 
+            font-style: italic; 
+            opacity: 0.8; 
+            border-left: 3px solid var(--golden-accent); 
+            padding-left: 10px; 
+            margin-top: 5px;
+        }
+        /* --- END CSS CHANGE --- */
     </style>
 </head>
 <body>
     <div class="container" id="mainAppContainer" style="display: none;">
         <header>
             <div class="title-group"><h1>No Sins 🌙</h1><h2 id="greeting"></h2></div>
-            <div class="theme-switcher" id="themeSwitcher" title="Change Theme">🌓</div>
-        </header>
+            <div class="controls" style="display: flex; gap: 10px;">
+                <div class="icon-btn" id="howToUseBtn" title="How to Use">❓</div> <div class="theme-switcher" id="themeSwitcher" title="Change Theme">🌓</div>
+            </div>
+            </header>
         
         <div class="dashboard-stats">
             <div class="stat-card">
@@ -151,18 +189,154 @@
         </div>
     </div>
 
+    <div id="howToUseModal" class="modal-overlay" style="display: none;">
+        <div class="modal-content" style="text-align: left; max-height: 80vh; overflow-y: auto;">
+            <h3 style="text-align: center;">🌙 How to Use – No Sins</h3>
+            <div id="howToUseBody" style="padding-top: 15px;">
+                <h4>1️⃣ Niyyat Karo</h4>
+                <p>Dil se decide karo ke yeh amal sirf Allah ke liye hai.</p>
+                <p class="quote">“Amal ka daromadar niyyat par hai.” — Bukhari</p>
+                
+                <h4 style="margin-top: 15px;">2️⃣ Apna Hadaf (Goal) Set Karo</h4>
+                <p><code>Naya Hadaf ✍️</code> tab par click karo.</p>
+                
+                <h4 style="margin-top: 15px;">3️⃣ Mode Select Karo</h4>
+                <ul>
+                    <li><strong>🕋 Strict Mode:</strong> Ek digital niyat sign karo. Agar fail hue to penalty ada karo.</li>
+                    <li><strong>☁️ Medium Mode:</strong> Sirf tracking ke liye, bina kisi sakht ahad ke.</li>
+                </ul>
+
+                <h4 style="margin-top: 15px;">4️⃣ Penalty Choose Karo</h4>
+                <p>Agar goal miss ho jaye to app aapko penalty yaad dilayegi. Jaise: 2 raka'at nafil ya Rs. 100 sadqa.</p>
+
+                <h4 style="margin-top: 15px;">5️⃣ Rozana Track Karo</h4>
+                <p>Har din Dashboard par apne hadaf ke neeche <code>Poora Kiya ✅</code> ya <code>Miss Hua ❌</code> mark karo. Isse aapka streak banega.</p>
+
+                <h4 style="margin-top: 15px;">6️⃣ Report & PDF</h4>
+                <p><code>Mera Safar 📜</code> tab me tum apna progress PDF me download kar sakte ho. <code>Roohani Diary 📖</code> ko bhi PDF me save kar sakte ho.</p>
+
+                <p class="quote" style="margin-top: 15px;">“Chhoti aadatein badlo, Jannah ka raasta asaan ho jata hai.”</p>
+            </div>
+            <div style="text-align: center; margin-top: 20px;">
+                <button class="btn btn-primary modalCloseBtn">Samajh Gaya</button>
+            </div>
+        </div>
+    </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script>
         const App = {
             db: { userName: null, goals: [], diaryEntries: [], theme: 'light', jannahPoints: 0 },
             elements: {},
-            asmaulHusna: [ {name: "Ar-Rahman", meaning: "The Beneficent"}, {name: "Ar-Rahim", meaning: "The Merciful"}, {name: "Al-Malik", meaning: "The King"}, {name: "Al-Quddus", meaning: "The Most Holy"}, {name: "As-Salam", meaning: "The Source of Peace"}, {name: "Al-Mu'min", meaning: "The Inspirer of Faith"}, {name: "Al-Muhaymin", meaning: "The Guardian"}, {name: "Al-Aziz", meaning: "The Victorious"}, {name: "Al-Jabbar", meaning: "The Compeller"}, {name: "Al-Mutakabbir", meaning: "The Greatest"} ],
+            asmaulHusna: [
+                { name: "Ar-Rahman", meaning: "Nihayat Meherban" },
+                { name: "Ar-Rahim", meaning: "Reham Farmane Wala" },
+                { name: "Al-Malik", meaning: "Haqeeqi Badshah" },
+                { name: "Al-Quddus", meaning: "Paak Zaat" },
+                { name: "As-Salam", meaning: "Salamti Dene Wala" },
+                { name: "Al-Mu’min", meaning: "Aman Dene Wala" },
+                { name: "Al-Muhaymin", meaning: "Nigehbaan" },
+                { name: "Al-Aziz", meaning: "Ghalib aur Zordar" },
+                { name: "Al-Jabbar", meaning: "Qudrat Wala" },
+                { name: "Al-Mutakabbir", meaning: "Badapan Wala" },
+                { name: "Al-Khaliq", meaning: "Paida Karne Wala" },
+                { name: "Al-Bari’", meaning: "Banane Wala" },
+                { name: "Al-Musawwir", meaning: "Soorat Banane Wala" },
+                { name: "Al-Ghaffar", meaning: "Bohat Bakhsne Wala" },
+                { name: "Al-Qahhar", meaning: "Sab Par Ghalib" },
+                { name: "Al-Wahhab", meaning: "Bina Mangay Dene Wala" },
+                { name: "Ar-Razzaq", meaning: "Rizq Dene Wala" },
+                { name: "Al-Fattah", meaning: "Raaste Kholne Wala" },
+                { name: "Al-Alim", meaning: "Sab Jaane Wala" },
+                { name: "Al-Qabid", meaning: "Rokne Wala" },
+                { name: "Al-Basit", meaning: "Kushada Karne Wala" },
+                { name: "Al-Khafid", meaning: "Neecha Karne Wala" },
+                { name: "Ar-Rafi’", meaning: "Buland Karne Wala" },
+                { name: "Al-Mu’izz", meaning: "Izzat Dene Wala" },
+                { name: "Al-Muzil", meaning: "Zillat Dene Wala" },
+                { name: "As-Sami’", meaning: "Sab Sunne Wala" },
+                { name: "Al-Basir", meaning: "Sab Dekhne Wala" },
+                { name: "Al-Hakam", meaning: "Faisla Karne Wala" },
+                { name: "Al-Adl", meaning: "Insaf Karne Wala" },
+                { name: "Al-Latif", meaning: "Nihayat Meherban" },
+                { name: "Al-Khabir", meaning: "Har Cheez Se Baakhabar" },
+                { name: "Al-Halim", meaning: "Bohat Bardasht Karne Wala" },
+                { name: "Al-Azim", meaning: "Nihayat Azeem" },
+                { name: "Al-Ghafur", meaning: "Bohat Bakhsne Wala" },
+                { name: "Ash-Shakur", meaning: "Qadr Dan" },
+                { name: "Al-Ali", meaning: "Nihayat Buland" },
+                { name: "Al-Kabir", meaning: "Nihayat Bada" },
+                { name: "Al-Hafiz", meaning: "Hifazat Karne Wala" },
+                { name: "Al-Muqit", meaning: "Rizq Dene Wala" },
+                { name: "Al-Hasib", meaning: "Hisaab Karne Wala" },
+                { name: "Al-Jalil", meaning: "Shaan Wala" },
+                { name: "Al-Karim", meaning: "Nihayat Karam Wala" },
+                { name: "Ar-Raqib", meaning: "Nigraani Karne Wala" },
+                { name: "Al-Mujib", meaning: "Duaen Qabool Karne Wala" },
+                { name: "Al-Wasi’", meaning: "Farak aur Wasi’" },
+                { name: "Al-Hakim", meaning: "Hikmat Wala" },
+                { name: "Al-Wadud", meaning: "Bohat Pyar Karne Wala" },
+                { name: "Al-Majid", meaning: "Shaan Wala" },
+                { name: "Al-Ba’ith", meaning: "Uthhane Wala" },
+                { name: "Ash-Shahid", meaning: "Gawah" },
+                { name: "Al-Haqq", meaning: "Haqeeqat Wala" },
+                { name: "Al-Wakil", meaning: "Kaar Saz" },
+                { name: "Al-Qawiyy", meaning: "Taqat Wala" },
+                { name: "Al-Mateen", meaning: "Mazboot" },
+                { name: "Al-Waliyy", meaning: "Dosti Karne Wala" },
+                { name: "Al-Hamid", meaning: "Tareef Ke Laayak" },
+                { name: "Al-Muhsi", meaning: "Ginti Karne Wala" },
+                { name: "Al-Mubdi’", meaning: "Shuru Karne Wala" },
+                { name: "Al-Mu’id", meaning: "Dobara Paida Karne Wala" },
+                { name: "Al-Muhyi", meaning: "Zindagi Dene Wala" },
+                { name: "Al-Mumit", meaning: "Maut Dene Wala" },
+                { name: "Al-Hayy", meaning: "Hamesha Zinda" },
+                { name: "Al-Qayyum", meaning: "Sab Ko Thamne Wala" },
+                { name: "Al-Wajid", meaning: "Paanay Wala" },
+                { name: "Al-Majid", meaning: "Izzat Wala" },
+                { name: "Al-Wahid", meaning: "Aik" },
+                { name: "As-Samad", meaning: "Be Niyaaz" },
+                { name: "Al-Qadir", meaning: "Qudrat Wala" },
+                { name: "Al-Muqtadir", meaning: "Ikhtiyar Wala" },
+                { name: "Al-Muqaddim", meaning: "Aage Karne Wala" },
+                { name: "Al-Mu’akhkhir", meaning: "Peeche Karne Wala" },
+                { name: "Al-Awwal", meaning: "Pehla" },
+                { name: "Al-Akhir", meaning: "Aakhri" },
+                { name: "Az-Zahir", meaning: "Zahir" },
+                { name: "Al-Batin", meaning: "Posheeda" },
+                { name: "Al-Wali", meaning: "Madadgar" },
+                { name: "Al-Muta’ali", meaning: "Buland" },
+                { name: "Al-Barr", meaning: "Nekiyon Ka Sila Dene Wala" },
+                { name: "At-Tawwab", meaning: "Tauba Qabool Karne Wala" },
+                { name: "Al-Muntaqim", meaning: "Badla Lene Wala" },
+                { name: "Al-Afuww", meaning: "Maaf Karne Wala" },
+                { name: "Ar-Ra’uf", meaning: "Reham Wala" },
+                { name: "Malik-ul-Mulk", meaning: "Kainaat Ka Malik" },
+                { name: "Dhul-Jalali Wal-Ikram", meaning: "Shaan Aur Karam Wala" },
+                { name: "Al-Muqsit", meaning: "Insaaf Karne Wala" },
+                { name: "Al-Jami’", meaning: "Jama Karne Wala" },
+                { name: "Al-Ghani", meaning: "Be Niyaaz" },
+                { name: "Al-Mughni", meaning: "Ameer Karne Wala" },
+                { name: "Al-Mani’", meaning: "Rokne Wala" },
+                { name: "Ad-Darr", meaning: "Nuksaan Dene Wala" },
+                { name: "An-Nafi’", meaning: "Faida Dene Wala" },
+                { name: "An-Nur", meaning: "Noor Dene Wala" },
+                { name: "Al-Hadi", meaning: "Hidayat Dene Wala" },
+                { name: "Al-Badi’", meaning: "Be-Misaal" },
+                { name: "Al-Baqi", meaning: "Hamesha Zinda Rehne Wala" },
+                { name: "Al-Warith", meaning: "Waris" },
+                { name: "Ar-Rashid", meaning: "Raasta Dikhane Wala" },
+                { name: "As-Sabur", meaning: "Sabr Karne Wala" }
+            ],
             init() { this.cacheDOMElements(); this.loadData(); this.attachEventListeners(); },
             cacheDOMElements() {
                 this.elements = {
                     mainAppContainer: document.getElementById('mainAppContainer'), greeting: document.getElementById('greeting'), tabs: document.querySelectorAll('.nav-tab'), sections: document.querySelectorAll('.app-section'), goalForm: document.getElementById('goalForm'), goalList: document.getElementById('goalList'), dailyName: document.getElementById('asmaAlHusna'), dailyMeaning: document.getElementById('asmaAlHusnaMeaning'), journeyContainer: document.getElementById('journeyProgressContainer'), diaryForm: document.getElementById('diaryEntryForm'), diaryList: document.getElementById('diaryEntryList'), themeSwitcher: document.getElementById('themeSwitcher'), welcomeModal: document.getElementById('welcomeModal'), strictModal: document.getElementById('strictModal'), notificationModal: document.getElementById('notificationModal'), confirmModal: document.getElementById('confirmModal'), resourceList: document.getElementById('resourceList'),
                     jannahPoints: document.getElementById('jannahPoints'), activeGoals: document.getElementById('activeGoals'), bestStreak: document.getElementById('bestStreak'), downloadDiaryPdfBtn: document.getElementById('downloadDiaryPdfBtn'),
-                    disclaimerModal: document.getElementById('disclaimerModal'), disclaimerProceedBtn: document.getElementById('disclaimerProceedBtn')
+                    disclaimerModal: document.getElementById('disclaimerModal'), disclaimerProceedBtn: document.getElementById('disclaimerProceedBtn'),
+                    // --- JS CHANGE HERE ---
+                    howToUseBtn: document.getElementById('howToUseBtn'),
+                    howToUseModal: document.getElementById('howToUseModal')
+                    // --- END JS CHANGE ---
                 };
                 this.elements.goalForm.innerHTML = `<div class="form-group"><label for="goalTitle">Aap kya chhodna/shuru karna chahte hain?</label><input type="text" id="goalTitle" placeholder="Jaise: 'Main gussa control karunga.'" required></div><div class="form-group"><label for="goalDuration">Kitne din ka Hadaf hai?</label><select id="goalDuration"><option value="0">Hamesha</option><option value="7">7 Din</option><option value="30">30 Din</option><option value="40">40 Din</option></select></div><div class="form-group"><label for="goalDifficulty">Mushkil</label><select id="goalDifficulty"><option value="easy">Aasan</option><option value="medium">Darmiyana</option><option value="hard">Mushkil</option></select></div><div class="form-group"><label for="penaltyType">Penalty (Saza)?</label><select id="penaltyType"><option value="prayer">Nafil Namaz</option><option value="money">Sadqa</option><option value="other">Kuch aur</option></select></div><div class="form-group" id="penaltyValueContainer"><label for="penaltyValue">Penalty ki Tafseel</label><input type="text" id="penaltyValue" required></div><div class="form-group"><label for="goalMode">Mode</label><select id="goalMode"><option value="medium">Medium</option><option value="strict">Strict</option></select></div><button type="submit" class="btn btn-primary">Hadaf Set Karein</button>`;
                 // Updated strict modal wording: respectful, clear, and non-coercive language
@@ -221,7 +395,28 @@
                 this.elements.goalList.addEventListener('click', (e) => this.handleGoalActions(e));
                 this.elements.confirmModal.querySelector('#confirmNoBtn').addEventListener('click', () => this.elements.confirmModal.style.display = 'none');
                 this.elements.confirmModal.querySelector('#confirmYesBtn').addEventListener('click', () => this.handleConfirmDelete());
+                
+                // --- JS CHANGE HERE ---
+                // Add listener for the new "How to Use" button
+                this.elements.howToUseBtn.addEventListener('click', () => this.showHowToUse());
+
+                // Add listener to close the "How to Use" modal
+                this.elements.howToUseModal.addEventListener('click', (e) => {
+                    // Check if the click is on the overlay background or on a close button
+                    if (e.target.id === 'howToUseModal' || e.target.classList.contains('modalCloseBtn')) {
+                        this.elements.howToUseModal.style.display = 'none';
+                    }
+                });
+                // --- END JS CHANGE ---
             },
+            
+            // --- JS CHANGE HERE ---
+            // New function to show the modal
+            showHowToUse() {
+                this.elements.howToUseModal.style.display = 'flex';
+            },
+            // --- END JS CHANGE ---
+
             startApp() {
                 this.elements.welcomeModal.style.display = 'none';
                 this.elements.mainAppContainer.style.display = 'block';
@@ -329,8 +524,8 @@
             saveDiaryEntry(e) { e.preventDefault(); const text = document.getElementById('diaryText').value; if (!text.trim()) return; this.db.diaryEntries.unshift({ id: Date.now(), date: new Date().toISOString(), text }); this.saveData(); this.renderDiary(); document.getElementById('diaryText').value = ''; this.showNotification('Alhamdulillah', 'Aapke ehsaas mehfooz ho gaye hain.', 'success'); },
             renderDiary() { this.elements.diaryList.innerHTML = ''; if (this.db.diaryEntries.length === 0) { this.elements.diaryList.innerHTML = '<p style="text-align:center; opacity: 0.7; margin-top: 20px;">Aapki diary abhi khali hai.</p>'; return; } this.db.diaryEntries.forEach(entry => { const card = document.createElement('div'); card.className = 'goal-card diary-card'; const date = new Date(entry.date); card.innerHTML = `<div class="date">${date.toLocaleDateString('ur-PK', { day: 'numeric', month: 'long', year: 'numeric' })}</div><div class="text">${entry.text.replace(/\n/g, '<br>')}</div>`; this.elements.diaryList.appendChild(card); }); },
             renderResources() {
-                const resources = [ { title: 'Quran ki Tilawat sunein', url: 'https://open.spotify.com/show/39zPBEyaxgr6LBoUA7sYA7?si=s2aeQW7dTMyB-7CMVF1riw' }, { title: 'Hadith ka mutala karein', url: 'https://sunnah.com' }, { title: 'Islamic lectures (Bayan)', url: 'https://youtu.be/yRQlihE0cX4?si=CUdCekjCF6jAMjiV' } ];
-                this.elements.resourceList.innerHTML = resources.map(r => `<div class="resource-card"><h3>${r.title}</h3><a href="${r.url}" target="_blank">Yahan visit karein &rarr;</a></div>`).join('');
+                const resources = [ { title: 'Quran ki Tilawat sunein', url: 'https://open.spotify.com/show/39zPBEyaxgr6LBoUA7sYA7?si=s2aeQW7dTMyB-7CMVF1riw' }, { title: 'Hadith ka mutala karein', url: 'https.sunnah.com' }, { title: 'Islamic lectures (Bayan)', url: 'https://youtu.be/yRQlihE0cX4?si=CUdCekjCF6jAMjiV' } ];
+                this.elements.resourceList.innerHTML = resources.map(r => `<div class="resource-card"><h3>${r.title}</h3><a href="${r.url}" target="_blank">Yahan visit karein →</a></div>`).join('');
             },
             togglePenaltyInput() { const type = this.elements.goalForm.querySelector('#penaltyType').value; const valueInput = this.elements.goalForm.querySelector('#penaltyValue'); if (type === 'prayer') { valueInput.value = "2 Raka'at Nafil Tauba"; } else if (type === 'money') { valueInput.value = "Rs. 100 Sadqa"; } else { valueInput.value = ""; valueInput.placeholder = "Koi aur penalty likhein..."; } },
             toggleTheme() { this.db.theme = this.db.theme === 'light' ? 'dark' : 'light'; this.applyTheme(); this.saveData(); },
@@ -360,13 +555,13 @@
                         doc.text(`- Shuruwat ki Tarikh: ${formattedStartDate}`, 18, y); y += 6;
                         doc.text(`- Mode: ${goal.mode}`, 18, y); y += 6;
                          if (goal.contractSigned) {
-                            doc.setFont('helvetica', 'italic');
-                            const contractText = `Niyat: "Main apne Rab ke samne niyat karta/karti hoon ke main is burai ko chhorne ki poori koshish karunga/karungi. Agar main nakaam hua to main tauba karunga/karungi aur tay shuda saza ada karunga/karungi."`;
-                            const splitText = doc.splitTextToSize(contractText, 175);
-                            doc.text(splitText, 18, y);
-                            y += (splitText.length * 5); 
-                            doc.setFont('helvetica', 'normal');
-                        }
+                             doc.setFont('helvetica', 'italic');
+                             const contractText = `Niyat: "Main apne Rab ke samne niyat karta/karti hoon ke main is burai ko chhorne ki poori koshish karunga/karungi. Agar main nakaam hua to main tauba karunga/karungi aur tay shuda saza ada karunga/karungi."`;
+                             const splitText = doc.splitTextToSize(contractText, 175);
+                             doc.text(splitText, 18, y);
+                             y += (splitText.length * 5); 
+                             doc.setFont('helvetica', 'normal');
+                         }
                         doc.text(`- Current Streak: ${streak} din`, 18, y); y += 6;
                         doc.text(`- Kul Kamyab Din: ${completedDays}`, 18, y); y += 6;
                         doc.text(`- Kul Missed Din: ${missedDays}`, 18, y); y += 12;
